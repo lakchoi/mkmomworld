@@ -17,7 +17,7 @@ const HeroSection = () => {
         <img
           src={heroHands}
           alt="함께하는 세상"
-          className="w-full h-full object-cover opacity-80"
+          className="w-full h-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
       </div>
