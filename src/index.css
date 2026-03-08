@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,52 +6,49 @@
 
 @layer base {
   :root {
-    --background: 40 33% 98%;
-    --foreground: 200 25% 15%;
+    --background: 0 0% 7%;
+    --foreground: 0 0% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 200 25% 15%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 200 25% 15%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 174 42% 40%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 174 100% 50%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 14 80% 65%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 174 20% 94%;
-    --muted-foreground: 200 10% 45%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 55%;
 
-    --accent: 14 80% 65%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 174 100% 50%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 174 15% 88%;
-    --input: 174 15% 88%;
-    --ring: 174 42% 40%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 174 100% 50%;
 
     --radius: 0.75rem;
 
-    --subject-safety: 174 42% 40%;
-    --subject-food: 14 80% 65%;
-    --subject-environment: 142 50% 45%;
-    --subject-economy: 220 55% 55%;
+    --subject-safety: 174 100% 50%;
+    --subject-food: 35 100% 55%;
+    --subject-environment: 142 60% 50%;
+    --subject-economy: 220 70% 60%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(174 42% 40%), hsl(174 42% 30%));
-    --gradient-warm: linear-gradient(135deg, hsl(14 80% 65%), hsl(14 80% 55%));
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 174 100% 50%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 174 100% 50%;
   }
 }
 
@@ -60,13 +57,27 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
     font-family: 'Noto Sans KR', sans-serif;
   }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Scrolling ticker */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  animation: ticker 20s linear infinite;
+}
+
+/* Counter animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count-up {
+  animation: countUp 0.8s ease-out forwards;
 }
