@@ -22,20 +22,6 @@ const AdminLogin = () => {
     setLoading(false);
   };
 
-  const handleSignUp = async () => {
-    if (!email || !password) {
-      toast.error("이메일과 비밀번호를 입력해주세요.");
-      return;
-    }
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      toast.error("회원가입 실패: " + error.message);
-    } else {
-      toast.success("확인 이메일을 발송했습니다. 이메일을 확인해주세요.");
-    }
-    setLoading(false);
-  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
