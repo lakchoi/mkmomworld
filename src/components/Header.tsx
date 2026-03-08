@@ -18,7 +18,7 @@ const Header = () => {
           <span className="text-lg font-bold text-foreground">MK<span className="text-primary">momworld</span></span>
         </div>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-          <button onClick={() => scrollTo("subjects")} className="hover:text-primary transition-colors">4과목</button>
+          <button onClick={() => scrollTo("subjects")} className="hover:text-primary transition-colors">4대 캠페인</button>
           <button onClick={() => scrollTo("platform")} className="hover:text-primary transition-colors">안전동행</button>
           <button onClick={() => scrollTo("contact")} className="hover:text-primary transition-colors">상담신청</button>
         </nav>

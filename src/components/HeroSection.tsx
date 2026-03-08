@@ -21,12 +21,12 @@ const HeroSection = () => {
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-foreground mb-6">
               맘월드는<br />
-              <span className="text-primary">4과목</span>을 통해<br />
+              <span className="text-primary">4대 캠페인</span>을 통해<br />
               시민이 배우고,<br />
               함께 움직입니다
             </h1>
             <p className="text-lg text-muted-foreground max-w-lg mb-8 leading-relaxed">
-              치안·먹거리·환경·사회경제를 배우고,
+              치안·먹거리·환경·사회경제 캠페인을 배우고,
               <strong className="text-foreground"> '안전동행'</strong>으로 함께 움직이는 실행 플랫폼입니다.
             </p>
             <div className="flex flex-wrap gap-4">

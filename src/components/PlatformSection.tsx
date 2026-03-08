@@ -50,7 +50,7 @@ const PlatformSection = () => {
 
             <div className="bg-primary/5 rounded-xl p-6 border border-primary/10">
               <p className="text-foreground font-medium text-center text-lg leading-relaxed">
-                "맘월드는 치안·먹거리·환경·사회경제 4과목을 통해<br />
+                "맘월드는 치안·먹거리·환경·사회경제 4대 캠페인을 통해<br />
                 시민이 배우고, <strong className="text-primary">'안전동행'</strong>으로 함께 움직이는 실행 플랫폼입니다."
               </p>
             </div>
