@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -12,18 +13,28 @@ const ContactSection = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.phone.trim()) {
       toast.error("이름과 연락처는 필수 입력입니다.");
       return;
     }
     setIsSubmitting(true);
-    setTimeout(() => {
+    const { error } = await supabase
+      .from("contact_submissions")
+      .insert({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email || null,
+        message: formData.message || null,
+      });
+    if (error) {
+      toast.error("신청 중 오류가 발생했습니다. 다시 시도해주세요.");
+    } else {
       toast.success("참여 신청이 완료되었습니다! 빠른 시일 내에 연락 드리겠습니다.");
       setFormData({ name: "", phone: "", email: "", message: "" });
-      setIsSubmitting(false);
-    }, 800);
+    }
+    setIsSubmitting(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
