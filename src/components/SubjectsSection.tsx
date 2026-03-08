@@ -15,9 +15,7 @@ const campaigns = [
     items: ["터치소리 이해와 활용", "위급 상황 대응", "범죄·유괴 예방 시민 행동", "보호자·아이 시나리오 교육"],
     connections: ["홍보단 활동", "체험 캠페인", "지역 연결"],
     badge: "맘월드의 핵심 뿌리 캠페인",
-    accentClass: "bg-subject-safety",
-    accentTextClass: "text-subject-safety",
-    accentBgLight: "bg-subject-safety/10",
+    tags: ["치안", "안전", "밤길", "귀가", "걱정제로"],
   },
   {
     icon: Apple,
@@ -28,9 +26,7 @@ const campaigns = [
     items: ["안심 먹거리 기준", "생산자 이야기", "소비자 선택 교육", "아이 먹거리 시민 감시"],
     connections: ["신뢰 생산자 캠페인", "체험형 콘텐츠", "캐릭터 스토리"],
     badge: "엄마·아빠 공감도 최고로 강한 캠페인",
-    accentClass: "bg-subject-food",
-    accentTextClass: "text-subject-food",
-    accentBgLight: "bg-subject-food/10",
+    tags: ["먹거리", "안심", "건강", "신뢰", "안전"],
   },
   {
     icon: Leaf,
@@ -41,9 +37,7 @@ const campaigns = [
     items: ["생활 속 환경 보호", "아이 눈높이 환경 교육", "지역 환경 캠페인", "일회용·유해환경 인식"],
     connections: ["가족 참여 캠페인", "학교·지역 연계", "캐릭터 미션형 활동"],
     badge: "아이 교육 + 가족 참여에 아주 좋음",
-    accentClass: "bg-subject-environment",
-    accentTextClass: "text-subject-environment",
-    accentBgLight: "bg-subject-environment/10",
+    tags: ["환경", "미래", "보호", "실천", "교육"],
   },
   {
     icon: Handshake,
@@ -54,169 +48,106 @@ const campaigns = [
     items: ["사회적 경제 이해", "협동조합·비영리 구조", "시민 소비자 역할", "지속 가능한 공동체"],
     connections: ["지역 상생 프로젝트", "기업 협력", "후원·참여 구조 이해"],
     badge: "어른용 사고 확장 캠페인",
-    accentClass: "bg-subject-economy",
-    accentTextClass: "text-subject-economy",
-    accentBgLight: "bg-subject-economy/10",
+    tags: ["청년", "미래", "희망", "꿈", "응원"],
   },
 ];
 
-const CampaignSection = ({
-  campaign,
-  index,
-  reversed,
-}: {
-  campaign: (typeof campaigns)[0];
-  index: number;
-  reversed: boolean;
-}) => {
-  const Icon = campaign.icon;
-
-  return (
-    <section
-      className={`relative py-20 md:py-28 overflow-hidden ${index % 2 === 0 ? "bg-background" : "bg-muted"}`}
-    >
-      <div className="container mx-auto px-6">
-        <div className={`grid lg:grid-cols-2 gap-12 lg:gap-20 items-center ${reversed ? "lg:direction-rtl" : ""}`}>
-          {/* Image */}
-          <motion.div
-            initial={{ opacity: 0, x: reversed ? 80 : -80 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className={`${reversed ? "lg:order-2" : "lg:order-1"}`}
-          >
-            <div className="relative group">
-              <div className={`absolute -inset-4 ${campaign.accentBgLight} rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500`} />
-              <img
-                src={campaign.image}
-                alt={`${campaign.title} 캠페인`}
-                className="relative w-full rounded-2xl shadow-xl group-hover:scale-[1.02] transition-transform duration-500"
-              />
-              {/* Floating badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4, duration: 0.5 }}
-                className={`absolute -bottom-4 ${reversed ? "-left-4" : "-right-4"} ${campaign.accentClass} text-primary-foreground px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg`}
-              >
-                캠페인 {String(index + 1).padStart(2, "0")}
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: reversed ? -80 : 80 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
-            className={`${reversed ? "lg:order-1" : "lg:order-2"}`}
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className={`w-11 h-11 rounded-xl ${campaign.accentClass} flex items-center justify-center`}>
-                <Icon className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <div>
-                <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">{campaign.title}</h2>
-              </div>
-            </div>
-            <p className="text-sm font-medium text-muted-foreground mb-6 tracking-wide">{campaign.subtitle}</p>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-              className={`${campaign.accentBgLight} rounded-xl p-5 mb-8 border-l-4 ${campaign.accentClass.replace("bg-", "border-")}`}
-            >
-              <p className={`font-semibold ${campaign.accentTextClass} text-base`}>
-                "{campaign.question}"
-              </p>
-            </motion.div>
-
-            <div className="mb-6">
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">캠페인 내용</p>
-              <ul className="space-y-2.5">
-                {campaign.items.map((item, i) => (
-                  <motion.li
-                    key={item}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4 + i * 0.08, duration: 0.3 }}
-                    className="flex items-center gap-3 text-foreground"
-                  >
-                    <span className={`w-2 h-2 rounded-full ${campaign.accentClass} shrink-0`} />
-                    <span className="text-sm">{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mb-6">
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">안전동행 연결</p>
-              <div className="flex flex-wrap gap-2">
-                {campaign.connections.map((conn) => (
-                  <span
-                    key={conn}
-                    className={`text-xs px-4 py-1.5 rounded-full ${campaign.accentBgLight} ${campaign.accentTextClass} font-semibold border ${campaign.accentClass.replace("bg-", "border-")}/20`}
-                  >
-                    {conn}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className={`inline-flex items-center gap-2 ${campaign.accentBgLight} px-4 py-2 rounded-full`}>
-              <span className="text-base">👉</span>
-              <span className={`text-sm font-semibold ${campaign.accentTextClass}`}>{campaign.badge}</span>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
 const SubjectsSection = () => {
   return (
-    <div id="subjects">
-      {/* Section header */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <motion.span
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="inline-block bg-primary/10 text-primary px-5 py-2 rounded-full text-sm font-bold tracking-wide uppercase mb-4"
-            >
-              4 Campaigns
-            </motion.span>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">맘월드 4대 캠페인</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-              서로 겹치지 않는 4대 캠페인 체계로<br className="hidden sm:block" />
-              엄마·아이·시민·기업 모두를 포용합니다
-            </p>
-          </motion.div>
-        </div>
-      </section>
+    <div id="campaigns">
+      {campaigns.map((campaign, index) => {
+        const Icon = campaign.icon;
+        const reversed = index % 2 !== 0;
 
-      {/* Campaign sections */}
-      {campaigns.map((campaign, index) => (
-        <CampaignSection
-          key={campaign.title}
-          campaign={campaign}
-          index={index}
-          reversed={index % 2 !== 0}
-        />
-      ))}
+        return (
+          <section
+            key={campaign.title}
+            className={`py-20 md:py-28 ${index % 2 === 0 ? "bg-background" : "bg-card"}`}
+          >
+            <div className="container mx-auto px-6">
+              <div className={`grid lg:grid-cols-2 gap-12 lg:gap-20 items-center`}>
+                {/* Image */}
+                <motion.div
+                  initial={{ opacity: 0, x: reversed ? 80 : -80 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.7 }}
+                  className={reversed ? "lg:order-2" : "lg:order-1"}
+                >
+                  <div className="relative group">
+                    <div className="absolute -inset-1 bg-primary/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <img
+                      src={campaign.image}
+                      alt={`${campaign.title} 캠페인`}
+                      className="relative w-full rounded-2xl group-hover:scale-[1.02] transition-transform duration-500"
+                    />
+                    <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-4 py-2 rounded-xl font-bold text-sm">
+                      캠페인 {String(index + 1).padStart(2, "0")}
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Content */}
+                <motion.div
+                  initial={{ opacity: 0, x: reversed ? -80 : 80 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.7, delay: 0.1 }}
+                  className={reversed ? "lg:order-1" : "lg:order-2"}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <Icon className="w-8 h-8 text-primary" />
+                    <span className="text-primary font-bold text-sm tracking-widest uppercase">{campaign.subtitle}</span>
+                  </div>
+                  <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">{campaign.title}</h2>
+
+                  <div className="border-l-4 border-primary bg-primary/5 rounded-r-xl px-6 py-4 mb-6">
+                    <p className="text-foreground font-semibold text-lg">"{campaign.question}"</p>
+                  </div>
+
+                  <ul className="space-y-3 mb-6">
+                    {campaign.items.map((item, i) => (
+                      <motion.li
+                        key={item}
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 + i * 0.08 }}
+                        className="flex items-center gap-3 text-foreground"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                        <span>{item}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {campaign.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs px-3 py-1.5 rounded-full border border-primary/30 text-primary font-semibold"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="text-xs text-muted-foreground font-bold uppercase tracking-widest">안전동행 →</span>
+                    {campaign.connections.map((conn) => (
+                      <span key={conn} className="text-xs px-3 py-1 rounded-full bg-secondary text-muted-foreground font-medium">
+                        {conn}
+                      </span>
+                    ))}
+                  </div>
+
+                  <p className="text-primary font-semibold text-sm">👉 {campaign.badge}</p>
+                </motion.div>
+              </div>
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 };
