@@ -83,7 +83,7 @@ const ContactSection = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">관심 과목</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">관심 캠페인</label>
               <select
                 name="interest"
                 value={formData.interest}

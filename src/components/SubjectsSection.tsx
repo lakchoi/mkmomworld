@@ -75,10 +75,10 @@ const SubjectsSection = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="text-primary font-semibold text-sm tracking-wide uppercase">Education System</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-3 mb-4">맘월드 4과목</h2>
+          <span className="text-primary font-semibold text-sm tracking-wide uppercase">Campaign</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-3 mb-4">맘월드 4대 캠페인</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            서로 겹치지 않는 4과목 체계로 엄마·아이·시민·기업 모두를 포용합니다
+            서로 겹치지 않는 4대 캠페인 체계로 엄마·아이·시민·기업 모두를 포용합니다
           </p>
         </motion.div>
 
