@@ -79,7 +79,7 @@ const SubjectsSection = () => {
                     <img
                       src={campaign.image}
                       alt={`${campaign.title} 캠페인`}
-                      className="relative w-full rounded-2xl group-hover:scale-[1.02] transition-transform duration-500"
+                      className="relative w-full rounded-3xl shadow-2xl shadow-primary/20 group-hover:scale-[1.02] transition-transform duration-500"
                     />
                     <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-4 py-2 rounded-xl font-bold text-sm">
                       캠페인 {String(index + 1).padStart(2, "0")}
