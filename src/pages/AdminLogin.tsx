@@ -22,20 +22,6 @@ const AdminLogin = () => {
     setLoading(false);
   };
 
-  const handleSignUp = async () => {
-    if (!email || !password) {
-      toast.error("이메일과 비밀번호를 입력해주세요.");
-      return;
-    }
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      toast.error("회원가입 실패: " + error.message);
-    } else {
-      toast.success("확인 이메일을 발송했습니다. 이메일을 확인해주세요.");
-    }
-    setLoading(false);
-  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
@@ -66,14 +52,6 @@ const AdminLogin = () => {
           className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold hover:brightness-110 transition-all disabled:opacity-50"
         >
           {loading ? "로그인 중..." : "로그인"}
-        </button>
-        <button
-          type="button"
-          onClick={handleSignUp}
-          disabled={loading}
-          className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          계정이 없으신가요? 회원가입
         </button>
       </form>
     </div>
