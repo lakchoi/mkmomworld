@@ -14,7 +14,7 @@ const PlatformSection = () => {
           <span className="text-secondary font-semibold text-sm tracking-wide uppercase">Action Platform</span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-3 mb-4">안전동행</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            4과목은 교육·가치·콘텐츠 체계이고, 안전동행은 현장·캠페인·참여의 실행 플랫폼입니다
+            4대 캠페인은 교육·가치·콘텐츠 체계이고, 안전동행은 현장·캠페인·참여의 실행 플랫폼입니다
           </p>
         </motion.div>
 
