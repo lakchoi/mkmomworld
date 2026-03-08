@@ -53,14 +53,6 @@ const AdminLogin = () => {
         >
           {loading ? "로그인 중..." : "로그인"}
         </button>
-        <button
-          type="button"
-          onClick={handleSignUp}
-          disabled={loading}
-          className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          계정이 없으신가요? 회원가입
-        </button>
       </form>
     </div>
   );
