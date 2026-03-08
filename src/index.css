@@ -6,49 +6,49 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 20% 15%;
+    --background: 220 15% 95%;
+    --foreground: 220 25% 12%;
 
-    --card: 210 20% 97%;
-    --card-foreground: 220 20% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 15%;
+    --popover-foreground: 220 25% 12%;
 
-    --primary: 174 80% 38%;
+    --primary: 174 75% 32%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 15% 93%;
-    --secondary-foreground: 220 20% 15%;
+    --secondary: 215 15% 88%;
+    --secondary-foreground: 220 25% 12%;
 
-    --muted: 210 15% 95%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 215 12% 90%;
+    --muted-foreground: 220 10% 40%;
 
-    --accent: 174 80% 38%;
+    --accent: 174 75% 32%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 15% 88%;
-    --input: 210 15% 88%;
-    --ring: 174 80% 38%;
+    --border: 215 15% 82%;
+    --input: 215 15% 82%;
+    --ring: 174 75% 32%;
 
     --radius: 0.75rem;
 
-    --subject-safety: 174 80% 38%;
-    --subject-food: 25 90% 52%;
-    --subject-environment: 152 60% 40%;
-    --subject-economy: 220 65% 52%;
+    --subject-safety: 174 75% 32%;
+    --subject-food: 25 85% 48%;
+    --subject-environment: 152 55% 36%;
+    --subject-economy: 220 60% 48%;
 
-    --sidebar-background: 210 20% 97%;
-    --sidebar-foreground: 220 20% 15%;
-    --sidebar-primary: 174 80% 38%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 25% 12%;
+    --sidebar-primary: 174 75% 32%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 15% 93%;
-    --sidebar-accent-foreground: 220 20% 15%;
-    --sidebar-border: 210 15% 88%;
-    --sidebar-ring: 174 80% 38%;
+    --sidebar-accent: 215 15% 88%;
+    --sidebar-accent-foreground: 220 25% 12%;
+    --sidebar-border: 215 15% 82%;
+    --sidebar-ring: 174 75% 32%;
   }
 }
 
