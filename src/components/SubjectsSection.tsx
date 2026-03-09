@@ -119,9 +119,15 @@ const SubjectsSection = () => {
                   </div>
                   <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">{campaign.title}</h2>
 
-                  <div className="border-l-4 border-primary bg-primary/5 rounded-r-xl px-6 py-4 mb-6">
-                    <p className="text-foreground font-semibold text-lg">"{campaign.question}"</p>
-                  </div>
+                   <div className="border-l-4 border-primary bg-primary/5 rounded-r-xl px-6 py-4 mb-6">
+                     <p className="text-foreground font-semibold text-lg">"{campaign.question}"</p>
+                   </div>
+
+                   {"description" in campaign && campaign.description && (
+                     <p className="text-muted-foreground leading-relaxed mb-6 text-sm">
+                       {campaign.description}
+                     </p>
+                   )}
 
                   <ul className="space-y-3 mb-6">
                     {campaign.items.map((item, i) => (
