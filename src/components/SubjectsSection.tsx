@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { Shield, Apple, Leaf, Handshake } from "lucide-react";
+import { Shield, Apple, Leaf, Handshake, HeartHandshake } from "lucide-react";
 import campaignSafety from "@/assets/campaign-safety.png";
 import campaignFood from "@/assets/campaign-food.png";
 import campaignEnvironment from "@/assets/campaign-environment.png";
 import campaignEconomy from "@/assets/campaign-economy.png";
+import campaignHospital from "@/assets/campaign-hospital.png";
 
 const campaigns = [
   {
