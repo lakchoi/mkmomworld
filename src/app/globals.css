@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  /* ── 배경 (차분한 슬레이트, 너무 어둡지 않은 톤) ── */
+  --bg-main:       #1e293b;   /* slate-800 - 차분하고 읽기 좋은 다크 */
+  --bg-card:       #293548;   /* 카드 배경 */
+  --bg-section:    #1e293b;   /* 섹션 배경 */
+  --bg-section2:   #253041;   /* 교차 섹션 */
+  --bg-deep:       #162032;   /* 더 깊은 배경 (히어로 등) */
+
+  /* ── 텍스트 ── */
+  --foreground:    #e2e8f0;   /* 메인 텍스트 */
+  --muted:         #94a3b8;   /* 보조 텍스트 */
+  --muted-light:   #64748b;
+
+  /* ── 민트 포인트 ── */
+  --primary:       #2dd4bf;
+  --primary-dark:  #14b8a6;
+  --primary-light: rgba(45,212,191,0.12);
+
+  /* ── 보더 ── */
+  --border:        #334155;   /* slate-700 */
+  --border-light:  rgba(45,212,191,0.15);
+
+  --font-sans: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  color: var(--foreground);
+  line-height: 1.7;
+}
+
+html { scroll-behavior: smooth; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #1e293b; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-fade-in    { animation: fadeInUp 0.65s ease-out forwards; }
+.animate-slide-left { animation: slideInLeft 0.65s ease-out forwards; }
+.animate-slide-right{ animation: slideInRight 0.65s ease-out forwards; }
+.animate-ticker     { animation: ticker 28s linear infinite; }
+.animate-float      { animation: float 4s ease-in-out infinite; }
+
+/* ── Campaign card ── */
+.campaign-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.campaign-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.30), 0 0 0 1px rgba(45,212,191,0.15);
+}
+
+/* ── Gradient text ── */
+.gradient-text {
+  background: linear-gradient(135deg, #2dd4bf 0%, #5eead4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Primary button ── */
+.btn-primary {
+  background: #2dd4bf;
+  color: #0f172a;
+  border-radius: 9999px;
+  padding: 0.75rem 2rem;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background: #14b8a6;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(45,212,191,0.30);
+}
+
+/* ── Ticker bar ── */
+.ticker-bar {
+  background: linear-gradient(90deg, #2dd4bf 0%, #14b8a6 100%);
+  overflow: hidden;
+}
+
+/* ── Glass card ── */
+.glass-card {
+  background: rgba(41,53,72,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(45,212,191,0.15);
+}
+
+/* ── Section divider ── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(45,212,191,0.3), transparent);
+}

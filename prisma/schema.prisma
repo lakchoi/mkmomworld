@@ -1,0 +1,290 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// 회원 등급 enum
+enum UserRole {
+  ADMIN       // 관리자
+  GRADE1      // 1등급 (씨앗)
+  GRADE2      // 2등급 (새싹)
+  GRADE3      // 3등급 (나무)
+  GRADE4      // 4등급 (열매)
+  GRADE5      // 5등급 (숲)
+}
+
+// 회원 테이블
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  password        String
+  name            String
+  phone           String?
+  role            UserRole  @default(GRADE1)
+  referralCode    String    @unique  // 본인 고유 추천 코드
+  referredBy      String?   // 추천인 코드
+  referrer        User?     @relation("Referrals", fields: [referredBy], references: [referralCode])
+  referrals       User[]    @relation("Referrals")
+  isActive        Boolean   @default(true)
+  emailVerified   Boolean   @default(false)
+  profileImage    String?
+  bio             String?
+  totalPoints     Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  points          Point[]
+  orders          Order[]
+  campaignApps    CampaignApplication[]
+  posts           Post[]
+  comments        Comment[]
+  sessions        Session[]
+
+  @@map("users")
+}
+
+// 세션 테이블
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// 캠페인 카테고리
+model CampaignCategory {
+  id          String     @id @default(uuid())
+  name        String
+  slug        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  campaigns   Campaign[]
+
+  @@map("campaign_categories")
+}
+
+// 캠페인 테이블
+model Campaign {
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  summary         String   // 짧은 설명 (메인페이지 썸네일용)
+  description     String   // 상세 내용
+  thumbnailImage  String?  // 썸네일 이미지 URL
+  bannerImage     String?  // 상세페이지 배너 이미지
+  images          String   @default("[]") // JSON array of image URLs
+  categoryId      String?
+  category        CampaignCategory? @relation(fields: [categoryId], references: [id])
+  isActive        Boolean  @default(true)
+  isDisplayed     Boolean  @default(true) // 메인페이지 표시 여부
+  displayOrder    Int      @default(0)    // 메인페이지 표시 순서
+  startDate       DateTime?
+  endDate         DateTime?
+  maxParticipants Int?
+  currentCount    Int      @default(0)
+  requiredGrade   UserRole @default(GRADE1)  // 참여 가능 최소 등급
+  tags            String   @default("[]") // JSON array of tags
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  applications    CampaignApplication[]
+  products        Product[]
+
+  @@map("campaigns")
+}
+
+// 캠페인 신청 테이블
+model CampaignApplication {
+  id           String    @id @default(uuid())
+  campaignId   String
+  campaign     Campaign  @relation(fields: [campaignId], references: [id])
+  userId       String?
+  user         User?     @relation(fields: [userId], references: [id])
+  name         String
+  phone        String
+  email        String
+  campaignName String    // 신청 캠페인명
+  message      String?
+  status       String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("campaign_applications")
+}
+
+// 상품 카테고리
+model ProductCategory {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  products    Product[]
+
+  @@map("product_categories")
+}
+
+// 상품 테이블
+model Product {
+  id              String   @id @default(uuid())
+  name            String
+  slug            String   @unique
+  description     String
+  images          String   @default("[]") // JSON array
+  categoryId      String?
+  category        ProductCategory? @relation(fields: [categoryId], references: [id])
+  campaignId      String?
+  campaign        Campaign? @relation(fields: [campaignId], references: [id])
+  basePrice       Int      // 기본 가격 (원)
+  stock           Int      @default(0)
+  isActive        Boolean  @default(true)
+  
+  // 등급별 가격 (JSON: {"GRADE1": 10000, "GRADE2": 9500, ...})
+  gradePrices     String   @default("{}")
+  
+  // 등급별 포인트 적립률 (JSON: {"GRADE1": 1, "GRADE2": 2, ...}) - %
+  gradePointRates String   @default("{}")
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  orderItems      OrderItem[]
+
+  @@map("products")
+}
+
+// 주문 테이블
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  totalAmount Int
+  pointsUsed  Int         @default(0)
+  pointsEarned Int        @default(0)
+  status      String      @default("PENDING") // PENDING, PAID, SHIPPED, DELIVERED, CANCELLED
+  paymentMethod String?
+  address     String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  items       OrderItem[]
+  points      Point[]
+
+  @@map("orders")
+}
+
+// 주문 항목
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id])
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  quantity    Int
+  price       Int      // 주문 시점의 가격
+  pointRate   Int      @default(0) // 포인트 적립률 %
+  createdAt   DateTime @default(now())
+
+  @@map("order_items")
+}
+
+// 포인트 내역
+model Point {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  orderId     String?
+  order       Order?   @relation(fields: [orderId], references: [id])
+  amount      Int      // 양수: 적립, 음수: 사용
+  type        String   // EARN, USE, ADMIN_ADD, ADMIN_DEDUCT, REFERRAL_BONUS
+  description String
+  createdAt   DateTime @default(now())
+
+  @@map("points")
+}
+
+// 블로그 포스트
+model Post {
+  id          String    @id @default(uuid())
+  title       String
+  slug        String    @unique
+  content     String
+  summary     String?
+  thumbnail   String?
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  categoryId  String?
+  postCategory PostCategory? @relation(fields: [categoryId], references: [id])
+  tags        String    @default("[]")
+  isPublished Boolean   @default(false)
+  viewCount   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[]
+
+  @@map("posts")
+}
+
+// 블로그 포스트 카테고리
+model PostCategory {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  posts       Post[]
+
+  @@map("post_categories")
+}
+
+// 댓글
+model Comment {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  content   String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
+}
+
+// 사이트 설정
+model SiteSettings {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// 배너/공지
+model Banner {
+  id          String   @id @default(uuid())
+  title       String
+  subtitle    String?
+  image       String?
+  link        String?
+  isActive    Boolean  @default(true)
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("banners")
+}
