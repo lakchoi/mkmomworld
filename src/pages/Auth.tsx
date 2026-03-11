@@ -3,13 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
-import { Shield, Mail, Lock, User } from "lucide-react";
+import { Shield, Mail, Lock, User, Phone } from "lucide-react";
 
 const Auth = () => {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [consentPrivacy, setConsentPrivacy] = useState(false);
+  const [consentNotification, setConsentNotification] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -24,16 +27,33 @@ const Auth = () => {
     setLoading(true);
 
     if (mode === "signup") {
-      const { error } = await supabase.auth.signUp({
+      if (!consentPrivacy) {
+        toast.error("개인정보 수집 및 이용에 동의해주세요.");
+        setLoading(false);
+        return;
+      }
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data: { full_name: name },
+          data: { full_name: name, phone },
           emailRedirectTo: window.location.origin,
         },
       });
-      if (error) toast.error(error.message);
-      else toast.success("가입 확인 이메일을 보냈습니다. 이메일을 확인해주세요.");
+      if (error) {
+        toast.error(error.message);
+      } else {
+        // Update profile with phone and consent
+        if (data.user) {
+          await supabase.from("profiles").update({
+            phone,
+            consent_privacy: consentPrivacy,
+            consent_notification: consentNotification,
+          }).eq("id", data.user.id);
+        }
+        toast.success("회원가입이 완료되었습니다!");
+        navigate("/");
+      }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) toast.error("로그인 실패: " + error.message);
@@ -105,17 +125,31 @@ const Auth = () => {
         {/* Email Auth Form */}
         <form onSubmit={handleEmailAuth} className="space-y-4">
           {mode === "signup" && (
-            <div className="relative">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="이름"
-                className={`${inputClass} pl-11`}
-                required
-              />
-            </div>
+            <>
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="이름"
+                  className={`${inputClass} pl-11`}
+                  required
+                />
+              </div>
+              <div className="relative">
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="연락처 (010-0000-0000)"
+                  className={`${inputClass} pl-11`}
+                  required
+                  maxLength={20}
+                />
+              </div>
+            </>
           )}
           <div className="relative">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -140,6 +174,34 @@ const Auth = () => {
               minLength={6}
             />
           </div>
+
+          {mode === "signup" && (
+            <div className="space-y-3 text-sm">
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentPrivacy}
+                  onChange={(e) => setConsentPrivacy(e.target.checked)}
+                  className="accent-primary mt-0.5"
+                />
+                <span className="text-muted-foreground">
+                  <span className="text-destructive">[필수]</span> 개인정보 수집 및 이용에 동의합니다. (카페 및 사이트에서 이름, 이메일, 연락처 정보를 수집하며 서비스 제공 목적으로 사용됩니다.)
+                </span>
+              </label>
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentNotification}
+                  onChange={(e) => setConsentNotification(e.target.checked)}
+                  className="accent-primary mt-0.5"
+                />
+                <span className="text-muted-foreground">
+                  <span className="text-primary">[선택]</span> 캠페인 및 활동 관련 알림 수신에 동의합니다.
+                </span>
+              </label>
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={loading}

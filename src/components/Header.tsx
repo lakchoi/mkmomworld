@@ -7,14 +7,23 @@ import { supabase } from "@/integrations/supabase/client";
 const Header = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<{ email?: string } | null>(null);
+  const [displayName, setDisplayName] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const loadUser = async (userId: string) => {
+      const { data } = await supabase.from("profiles").select("display_name").eq("id", userId).single();
+      setDisplayName(data?.display_name || null);
+    };
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) loadUser(session.user.id);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) loadUser(session.user.id);
+      else setDisplayName(null);
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -30,6 +39,8 @@ const Header = () => {
     { label: "FAQ", id: "faq" },
     { label: "참여하기", id: "contact" },
   ];
+
+  const userName = displayName || user?.email?.split("@")[0] || "";
 
   return (
     <motion.header
@@ -51,12 +62,20 @@ const Header = () => {
         </nav>
         <div className="flex items-center gap-3">
           {user ? (
-            <button
-              onClick={async () => { await supabase.auth.signOut(); }}
-              className="hidden md:flex text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              로그아웃
-            </button>
+            <div className="hidden md:flex items-center gap-3">
+              <button
+                onClick={() => navigate("/profile")}
+                className="text-sm text-foreground font-medium hover:text-primary transition-colors flex items-center gap-1"
+              >
+                <User className="w-4 h-4" /> {userName}
+              </button>
+              <button
+                onClick={async () => { await supabase.auth.signOut(); }}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                로그아웃
+              </button>
+            </div>
           ) : (
             <button
               onClick={() => navigate("/auth")}
@@ -100,12 +119,20 @@ const Header = () => {
                 </button>
               ))}
               {user ? (
-                <button
-                  onClick={async () => { await supabase.auth.signOut(); setOpen(false); }}
-                  className="text-left py-3 px-4 rounded-lg text-muted-foreground font-medium hover:bg-muted transition-colors"
-                >
-                  로그아웃
-                </button>
+                <>
+                  <button
+                    onClick={() => { navigate("/profile"); setOpen(false); }}
+                    className="text-left py-3 px-4 rounded-lg text-foreground font-medium hover:bg-muted transition-colors flex items-center gap-2"
+                  >
+                    <User className="w-4 h-4" /> {userName} (내 정보)
+                  </button>
+                  <button
+                    onClick={async () => { await supabase.auth.signOut(); setOpen(false); }}
+                    className="text-left py-3 px-4 rounded-lg text-muted-foreground font-medium hover:bg-muted transition-colors"
+                  >
+                    로그아웃
+                  </button>
+                </>
               ) : (
                 <button
                   onClick={() => { navigate("/auth"); setOpen(false); }}

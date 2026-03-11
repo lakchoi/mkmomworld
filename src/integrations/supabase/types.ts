@@ -98,23 +98,32 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          consent_notification: boolean | null
+          consent_privacy: boolean | null
           created_at: string | null
           display_name: string | null
           id: string
+          phone: string | null
           updated_at: string | null
         }
         Insert: {
           avatar_url?: string | null
+          consent_notification?: boolean | null
+          consent_privacy?: boolean | null
           created_at?: string | null
           display_name?: string | null
           id: string
+          phone?: string | null
           updated_at?: string | null
         }
         Update: {
           avatar_url?: string | null
+          consent_notification?: boolean | null
+          consent_privacy?: boolean | null
           created_at?: string | null
           display_name?: string | null
           id?: string
+          phone?: string | null
           updated_at?: string | null
         }
         Relationships: []
