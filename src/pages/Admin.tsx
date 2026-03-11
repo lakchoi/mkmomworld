@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, RefreshCw, Plus, Trash2, Eye, EyeOff, ChevronDown, ChevronUp, Users, Megaphone } from "lucide-react";
+import { LogOut, RefreshCw, Plus, Trash2, Eye, EyeOff, ChevronDown, ChevronUp, Users, Megaphone, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 
 interface Submission {
@@ -29,11 +29,21 @@ interface Campaign {
   display_order: number;
 }
 
+interface Member {
+  id: string;
+  display_name: string | null;
+  phone: string | null;
+  consent_privacy: boolean | null;
+  consent_notification: boolean | null;
+  created_at: string | null;
+}
+
 const Admin = () => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"submissions" | "campaigns">("submissions");
+  const [activeTab, setActiveTab] = useState<"submissions" | "campaigns" | "members">("submissions");
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
   const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
@@ -73,14 +83,17 @@ const Admin = () => {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [subRes, campRes] = await Promise.all([
+    const [subRes, campRes, memRes] = await Promise.all([
       supabase.from("contact_submissions").select("*").order("created_at", { ascending: false }),
       supabase.from("campaigns").select("*").order("display_order", { ascending: true }),
+      supabase.from("profiles").select("id, display_name, phone, consent_privacy, consent_notification, created_at").order("created_at", { ascending: false }),
     ]);
     if (subRes.error) toast.error("신청 데이터 로딩 실패");
     else setSubmissions(subRes.data || []);
     if (campRes.error) toast.error("캠페인 데이터 로딩 실패");
     else setCampaigns((campRes.data || []) as Campaign[]);
+    if (memRes.error) toast.error("회원 데이터 로딩 실패: " + memRes.error.message);
+    else setMembers((memRes.data || []) as Member[]);
     setLoading(false);
   };
 
@@ -92,30 +105,21 @@ const Admin = () => {
   const formatDate = (d: string) =>
     new Date(d).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
 
+  // Campaign form handlers
   const openNewCampaign = () => {
     setEditingCampaign(null);
     setFormData({ ...emptyCampaign, display_order: campaigns.length });
-    setItemsText("");
-    setTagsText("");
-    setConnectionsText("");
+    setItemsText(""); setTagsText(""); setConnectionsText("");
     setShowForm(true);
   };
 
   const openEditCampaign = (c: Campaign) => {
     setEditingCampaign(c);
     setFormData({
-      title: c.title,
-      subtitle: c.subtitle || "",
-      question: c.question || "",
-      description: c.description || "",
-      image_url: c.image_url || "",
-      icon: c.icon || "Shield",
-      items: c.items,
-      tags: c.tags,
-      connections: c.connections,
-      badge: c.badge || "",
-      is_active: c.is_active,
-      display_order: c.display_order,
+      title: c.title, subtitle: c.subtitle || "", question: c.question || "",
+      description: c.description || "", image_url: c.image_url || "", icon: c.icon || "Shield",
+      items: c.items, tags: c.tags, connections: c.connections,
+      badge: c.badge || "", is_active: c.is_active, display_order: c.display_order,
     });
     setItemsText((c.items || []).join("\n"));
     setTagsText((c.tags || []).join(", "));
@@ -132,7 +136,6 @@ const Admin = () => {
       connections: connectionsText.split(",").map(s => s.trim()).filter(Boolean),
       updated_at: new Date().toISOString(),
     };
-
     if (editingCampaign) {
       const { error } = await supabase.from("campaigns").update(payload).eq("id", editingCampaign.id);
       if (error) toast.error("수정 실패: " + error.message);
@@ -171,6 +174,12 @@ const Admin = () => {
 
   const inputClass = "w-full px-4 py-3 rounded-xl border bg-secondary text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm";
 
+  const tabs = [
+    { key: "submissions" as const, label: "참여신청", icon: Users, count: submissions.length },
+    { key: "campaigns" as const, label: "캠페인", icon: Megaphone, count: campaigns.length },
+    { key: "members" as const, label: "회원관리", icon: UserCheck, count: members.length },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
@@ -189,19 +198,16 @@ const Admin = () => {
 
       {/* Tabs */}
       <div className="container mx-auto px-6 pt-6">
-        <div className="flex gap-2 border-b pb-0">
-          <button
-            onClick={() => setActiveTab("submissions")}
-            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === "submissions" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
-          >
-            <Users className="w-4 h-4" /> 참여신청 ({submissions.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("campaigns")}
-            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === "campaigns" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
-          >
-            <Megaphone className="w-4 h-4" /> 캠페인 ({campaigns.length})
-          </button>
+        <div className="flex gap-2 border-b pb-0 overflow-x-auto">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.key ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            >
+              <tab.icon className="w-4 h-4" /> {tab.label} ({tab.count})
+            </button>
+          ))}
         </div>
       </div>
 
@@ -251,7 +257,6 @@ const Admin = () => {
               </button>
             </div>
 
-            {/* Campaign Form Modal */}
             {showForm && (
               <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowForm(false)}>
                 <div className="bg-card border rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto space-y-4" onClick={e => e.stopPropagation()}>
@@ -332,6 +337,50 @@ const Admin = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Members Tab */}
+        {activeTab === "members" && (
+          <>
+            {loading ? (
+              <p className="text-muted-foreground text-center py-12">로딩 중...</p>
+            ) : members.length === 0 ? (
+              <p className="text-muted-foreground text-center py-12">가입된 회원이 없습니다.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-muted-foreground">
+                      <th className="py-3 px-4 font-medium">이름</th>
+                      <th className="py-3 px-4 font-medium">연락처</th>
+                      <th className="py-3 px-4 font-medium">개인정보 동의</th>
+                      <th className="py-3 px-4 font-medium">알림 수신</th>
+                      <th className="py-3 px-4 font-medium">가입일시</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {members.map((m) => (
+                      <tr key={m.id} className="border-b hover:bg-secondary/50 transition-colors">
+                        <td className="py-3 px-4 text-foreground font-medium whitespace-nowrap">{m.display_name || "-"}</td>
+                        <td className="py-3 px-4 text-foreground whitespace-nowrap">{m.phone || "-"}</td>
+                        <td className="py-3 px-4">
+                          <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${m.consent_privacy ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"}`}>
+                            {m.consent_privacy ? "동의" : "미동의"}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${m.consent_notification ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"}`}>
+                            {m.consent_notification ? "동의" : "미동의"}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-muted-foreground whitespace-nowrap">{m.created_at ? formatDate(m.created_at) : "-"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </>
