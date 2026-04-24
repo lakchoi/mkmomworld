@@ -3,7 +3,7 @@ import { Shield, Apple, Leaf, Handshake, HeartHandshake, Heart, Star } from "luc
 import { useNavigate } from "react-router-dom";
 import { useCampaigns } from "@/hooks/useCampaigns";
 
-import campaignSafety from "@/assets/campaign-safety.png";
+import campaignSafety from "@/assets/campaign-safety.jpg";
 import campaignFood from "@/assets/campaign-food.png";
 import campaignEnvironment from "@/assets/campaign-environment.png";
 import campaignEconomy from "@/assets/campaign-economy.png";
