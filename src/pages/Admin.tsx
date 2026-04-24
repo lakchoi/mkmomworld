@@ -68,14 +68,23 @@ const Admin = () => {
   const [tagsText, setTagsText] = useState("");
   const [connectionsText, setConnectionsText] = useState("");
 
+  const ADMIN_EMAIL = "mk.momworld@gmail.com";
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { navigate("/admin-login"); return; }
+      if (session.user.email !== ADMIN_EMAIL) {
+        toast.error("관리자 권한이 없습니다.");
+        await supabase.auth.signOut();
+        navigate("/");
+        return;
+      }
       fetchAll();
     };
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) navigate("/admin-login");
+      else if (session.user.email !== ADMIN_EMAIL) navigate("/");
     });
     checkAuth();
     return () => subscription.unsubscribe();
@@ -88,11 +97,11 @@ const Admin = () => {
       supabase.from("campaigns").select("*").order("display_order", { ascending: true }),
       supabase.from("profiles").select("id, display_name, phone, consent_privacy, consent_notification, created_at").order("created_at", { ascending: false }),
     ]);
-    if (subRes.error) toast.error("신청 데이터 로딩 실패");
+    if (subRes.error) toast.error("신청 데이터 로딩에 실패했습니다.");
     else setSubmissions(subRes.data || []);
-    if (campRes.error) toast.error("캠페인 데이터 로딩 실패");
+    if (campRes.error) toast.error("캠페인 데이터 로딩에 실패했습니다.");
     else setCampaigns((campRes.data || []) as Campaign[]);
-    if (memRes.error) toast.error("회원 데이터 로딩 실패: " + memRes.error.message);
+    if (memRes.error) toast.error("회원 데이터 로딩에 실패했습니다.");
     else setMembers((memRes.data || []) as Member[]);
     setLoading(false);
   };
