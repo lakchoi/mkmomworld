@@ -10,7 +10,7 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden bg-background">
       {/* Dark overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10 bg-secondary-foreground" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
       
       {/* Hero image */}
       <div className="absolute right-0 top-0 w-full lg:w-3/5 h-full">
