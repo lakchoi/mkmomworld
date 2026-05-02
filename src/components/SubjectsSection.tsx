@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Shield, Apple, Leaf, Handshake, HeartHandshake, Heart, Star } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useCampaigns } from "@/hooks/useCampaigns";
 
 import campaignSafety from "@/assets/campaign-safety.png";
@@ -50,12 +49,8 @@ const SubjectsSection = () => {
                   transition={{ duration: 0.7 }}
                   className={reversed ? "lg:order-2" : "lg:order-1"}
                 >
-                  <div
-                    className="relative group cursor-pointer"
-                    onClick={() => navigate(`/campaign/${campaign.id}`)}
-                  >
-                    <div className="absolute -inset-1 bg-primary/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="relative w-full aspect-[4/3] rounded-3xl shadow-2xl shadow-primary/20 group-hover:scale-[1.02] transition-transform duration-500 overflow-hidden bg-card">
+                  <div className="relative">
+                    <div className="relative w-full aspect-[4/3] rounded-3xl shadow-2xl shadow-primary/20 overflow-hidden bg-card">
                       <img
                         src={imageUrl}
                         alt={`${campaign.title} 캠페인`}
@@ -123,13 +118,6 @@ const SubjectsSection = () => {
                   </div>
 
                   {campaign.badge && <p className="text-primary font-semibold text-sm">👉 {campaign.badge}</p>}
-
-                  <button
-                    onClick={() => navigate(`/campaign/${campaign.id}`)}
-                    className="mt-4 text-sm text-primary font-bold hover:underline"
-                  >
-                    자세히 보기 →
-                  </button>
                 </motion.div>
               </div>
             </div>
