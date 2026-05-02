@@ -16,7 +16,7 @@ const fallbackImages: Record<string, string> = {
   "\"터치소리\" 안심귀가": campaignSafety,
   "먹거리": campaignFood,
   "환경": campaignEnvironment,
-  "사회경제": campaignEconomy,
+  "안전한 먹거리": campaignEconomy,
   "병원동행": campaignHospital,
 };
 
