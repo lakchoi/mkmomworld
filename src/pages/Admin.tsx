@@ -68,13 +68,18 @@ const Admin = () => {
   const [tagsText, setTagsText] = useState("");
   const [connectionsText, setConnectionsText] = useState("");
 
-  const ADMIN_EMAIL = "mk.momworld@gmail.com";
+  const verifyAdmin = async (userId: string): Promise<boolean> => {
+    const { data, error } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+    if (error) return false;
+    return data === true;
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { navigate("/admin-login"); return; }
-      if (session.user.email !== ADMIN_EMAIL) {
+      const isAdmin = await verifyAdmin(session.user.id);
+      if (!isAdmin) {
         toast.error("관리자 권한이 없습니다.");
         await supabase.auth.signOut();
         navigate("/");
@@ -83,8 +88,13 @@ const Admin = () => {
       fetchAll();
     };
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) navigate("/admin-login");
-      else if (session.user.email !== ADMIN_EMAIL) navigate("/");
+      if (!session) {
+        navigate("/admin-login");
+        return;
+      }
+      verifyAdmin(session.user.id).then((isAdmin) => {
+        if (!isAdmin) navigate("/");
+      });
     });
     checkAuth();
     return () => subscription.unsubscribe();
