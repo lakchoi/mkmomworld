@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, ArrowRight, Menu, X, User } from "lucide-react";
+import { ArrowRight, Menu, X, User } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import logo from "@/assets/mk-momworld-logo.png";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -50,7 +51,7 @@ const Header = () => {
     >
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
-          <Shield className="w-7 h-7 text-destructive" />
+          <img src={logo} alt="MK MOMWORLD 로고" className="w-9 h-9 rounded-full object-cover" />
           <span className="text-lg font-bold text-foreground tracking-wide">MK MOMWORLD</span>
         </div>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
