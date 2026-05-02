@@ -55,13 +55,15 @@ const SubjectsSection = () => {
                     onClick={() => navigate(`/campaign/${campaign.id}`)}
                   >
                     <div className="absolute -inset-1 bg-primary/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <img
-                      src={imageUrl}
-                      alt={`${campaign.title} 캠페인`}
-                      className="relative w-full rounded-3xl shadow-2xl shadow-primary/20 group-hover:scale-[1.02] transition-transform duration-500"
-                    />
-                    <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-4 py-2 rounded-xl font-bold text-sm">
-                      캠페인 {String(index + 1).padStart(2, "0")}
+                    <div className="relative w-full aspect-[4/3] rounded-3xl shadow-2xl shadow-primary/20 group-hover:scale-[1.02] transition-transform duration-500 overflow-hidden bg-card">
+                      <img
+                        src={imageUrl}
+                        alt={`${campaign.title} 캠페인`}
+                        className="absolute inset-0 w-full h-full object-contain p-4"
+                      />
+                      <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-4 py-2 rounded-xl font-bold text-sm">
+                        캠페인 {String(index + 1).padStart(2, "0")}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
