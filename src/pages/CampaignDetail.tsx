@@ -16,7 +16,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const fallbackImages: Record<string, string> = {
-  "치안": campaignSafety,
+  "\"터치소리\" 안심귀가": campaignSafety,
   "먹거리": campaignFood,
   "환경": campaignEnvironment,
   "사회경제": campaignEconomy,
