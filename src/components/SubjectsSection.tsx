@@ -22,7 +22,6 @@ const fallbackImages: Record<string, string> = {
 
 const SubjectsSection = () => {
   const { data: campaigns = [], isLoading } = useCampaigns();
-  const navigate = useNavigate();
 
   if (isLoading) return null;
 
