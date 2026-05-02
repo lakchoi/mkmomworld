@@ -1,4 +1,4 @@
-import { Shield } from "lucide-react";
+import logo from "@/assets/mk-momworld-logo.png";
 
 const Footer = () => {
   return (
@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <Shield className="w-6 h-6 text-primary" />
+            <img src={logo} alt="MK MOMWORLD 로고" className="w-8 h-8 rounded-full object-cover" />
             <span className="text-lg font-bold text-foreground">MK MOMWORLD</span>
           </div>
           <p className="text-muted-foreground text-sm text-center">
