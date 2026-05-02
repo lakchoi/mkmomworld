@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X, Coffee } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/mk-momworld-logo.png";
@@ -45,6 +45,14 @@ const Header = () => {
           >
             참여하기 <ArrowRight className="w-4 h-4" />
           </button>
+          <a
+            href="https://cafe.naver.com/rede9bak"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex border-2 border-primary text-primary px-5 py-2 rounded-full text-sm font-bold hover:bg-primary hover:text-primary-foreground transition-all items-center gap-2"
+          >
+            <Coffee className="w-4 h-4" /> 카페방문
+          </a>
           <button
             onClick={() => setOpen(!open)}
             className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-muted transition-colors"
@@ -79,6 +87,15 @@ const Header = () => {
               >
                 참여하기
               </button>
+              <a
+                href="https://cafe.naver.com/rede9bak"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="mt-2 border-2 border-primary text-primary py-3 rounded-xl font-bold text-center flex items-center justify-center gap-2"
+              >
+                <Coffee className="w-4 h-4" /> 네이버 카페방문
+              </a>
             </nav>
           </motion.div>
         )}
