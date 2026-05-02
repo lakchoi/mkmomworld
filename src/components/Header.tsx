@@ -1,33 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Menu, X, User } from "lucide-react";
-import { useState, useEffect } from "react";
+import { ArrowRight, Menu, X } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/mk-momworld-logo.png";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState<{ email?: string } | null>(null);
-  const [displayName, setDisplayName] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const loadUser = async (userId: string) => {
-      const { data } = await supabase.from("profiles").select("display_name").eq("id", userId).single();
-      setDisplayName(data?.display_name || null);
-    };
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) loadUser(session.user.id);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) loadUser(session.user.id);
-      else setDisplayName(null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -40,8 +19,6 @@ const Header = () => {
     { label: "FAQ", id: "faq" },
     { label: "참여하기", id: "contact" },
   ];
-
-  const userName = displayName || user?.email?.split("@")[0] || "";
 
   return (
     <motion.header
@@ -62,29 +39,6 @@ const Header = () => {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          {user ? (
-            <div className="hidden md:flex items-center gap-3">
-              <button
-                onClick={() => navigate("/profile")}
-                className="text-sm text-foreground font-medium hover:text-primary transition-colors flex items-center gap-1"
-              >
-                <User className="w-4 h-4" /> {userName}
-              </button>
-              <button
-                onClick={async () => { await supabase.auth.signOut(); }}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                로그아웃
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => navigate("/auth")}
-              className="hidden md:flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <User className="w-4 h-4" /> 로그인
-            </button>
-          )}
           <button
             onClick={() => scrollTo("contact")}
             className="hidden md:flex bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-bold hover:brightness-110 transition-all items-center gap-2"
@@ -119,29 +73,6 @@ const Header = () => {
                   {item.label}
                 </button>
               ))}
-              {user ? (
-                <>
-                  <button
-                    onClick={() => { navigate("/profile"); setOpen(false); }}
-                    className="text-left py-3 px-4 rounded-lg text-foreground font-medium hover:bg-muted transition-colors flex items-center gap-2"
-                  >
-                    <User className="w-4 h-4" /> {userName} (내 정보)
-                  </button>
-                  <button
-                    onClick={async () => { await supabase.auth.signOut(); setOpen(false); }}
-                    className="text-left py-3 px-4 rounded-lg text-muted-foreground font-medium hover:bg-muted transition-colors"
-                  >
-                    로그아웃
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => { navigate("/auth"); setOpen(false); }}
-                  className="text-left py-3 px-4 rounded-lg text-muted-foreground font-medium hover:bg-muted transition-colors"
-                >
-                  로그인 / 회원가입
-                </button>
-              )}
               <button
                 onClick={() => scrollTo("contact")}
                 className="mt-2 bg-primary text-primary-foreground py-3 rounded-xl font-bold text-center"
